@@ -571,7 +571,7 @@ def compute_posterior(information_instances):
                     # number of bins here.
                     info.chain[:, info.native_index+2], bins=info.bins,
                     #info.chain[:, info.native_index+2], bins=2*info.bins,
-                    weights=info.chain[:, 0], normed=False, density=False)
+                    weights=info.chain[:, 0], density=False)
                 info.hist = info.hist/info.hist.max()
                 # Correct for temperature
                 info.hist = info.hist**conf.temperature
@@ -877,7 +877,7 @@ def compute_posterior(information_instances):
                             info.chain[:, info.native_second_index+2],
                             weights=info.chain[:, 0],
                             bins=(info.bins, info.bins),
-                            normed=False)
+                            density=False)
                         # Correct for temperature:
                         info.n = info.n**conf.temperature
 
@@ -2289,18 +2289,25 @@ class Information(object):
         # ticks and x_range should be altered in order to display this
         # meaningful number instead.
         for i in range(np.shape(self.ticks)[0]):
+
             x_range = self.x_range[i]
             bounds = self.boundaries[i]
-            # Left boundary
-            if bounds[0] is not None:
-                if abs(x_range[0]-bounds[0]) < self.span[i]/self.bins:
-                    self.ticks[i][0] = bounds[0]
-                    self.x_range[i][0] = bounds[0]
-            # Right boundary
-            if bounds[-1] is not None:
-                if abs(x_range[-1]-bounds[-1]) < self.span[i]/self.bins:
-                    self.ticks[i][-1] = bounds[-1]
-                    self.x_range[i][-1] = bounds[-1]
+
+            try:
+                # Left boundary
+                if bounds[0] is not None:
+                    if abs(x_range[0]-bounds[0]) < self.span[i]/self.bins:
+                        self.ticks[i][0] = bounds[0]
+                        self.x_range[i][0] = bounds[0]
+                # Right boundary
+                if bounds[-1] is not None:
+                    if abs(x_range[-1]-bounds[-1]) < self.span[i]/self.bins:
+                        self.ticks[i][-1] = bounds[-1]
+                        self.x_range[i][-1] = bounds[-1]
+            except:
+                print(x_range)
+                print(bounds)
+                exit
 
     def write_information_files(self):
 

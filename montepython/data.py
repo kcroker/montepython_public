@@ -1206,6 +1206,11 @@ class Data(object):
                 self.cosmo_arguments['sigma8'] = self.cosmo_arguments['S_8'] * ((0.3*h**2) / (omega_b+omega_cdm+omega_nu))**0.5
                 del self.cosmo_arguments[elem]
 
+            elif re.search(r'log10__', elem):
+                original_name = re.search(r'log10__(.*)', elem).groups()[0]
+                self.cosmo_arguments[original_name] = 10**self.cosmo_arguments[elem]
+                del(self.cosmo_arguments[elem])
+                
             # Finally, deal with all the parameters ending with __i, where i is
             # an integer. Replace them all with their name without the trailing
             # double underscore, concatenated with each other. The test is
